@@ -4,8 +4,6 @@
 package require Tcl 8.6
 package require cmdline 1.5
 
-# TODO make it clear that options such as -net are nixos-specific
-# ...or detect nixos and case on that
 set options {
   {bwrap-options.arg "" "Additional options to pass to bwrap"          }
   {extra-store-paths "" "Additional store paths to bind the closure of"}
@@ -36,6 +34,13 @@ proc requisites_binds {path} {
   return [concat {*}[lmap x $requisites {list --ro-bind $x $x}]]
 }
 
+try {
+  exec nixos-version
+  set is_nixos 1
+} trap CHILDSTATUS {- -} {
+  set is_nixos 0
+}
+
 # there used to be a realpath
 # (or ::fileutil::fullnormalize, file normalize, file readlink) call here, but
 # it makes single-executable tools (such as busybox or coreutils) useless
@@ -56,25 +61,33 @@ if {$params(x11) == 1} {
 }
 
 if {$params(gpu) == 1} {
-  lappend bwrap_options \
-    --dev /dev \
-    --dev-bind /dev/dri /dev/dri \
-    --proc /proc \
-    --ro-bind /sys/devices/pci0000:00 /sys/devices/pci0000:00 \
-    --ro-bind /sys/dev/char /sys/dev/char \
-    --ro-bind /run/opengl-driver /run/opengl-driver \
-    {*}[requisites_binds /run/opengl-driver]
-    # MAYBE add /run/opengl-driver32 too (if it exists. does it always exist?)
+  if {$is_nixos} {
+    lappend bwrap_options \
+      --dev /dev \
+      --dev-bind /dev/dri /dev/dri \
+      --proc /proc \
+      --ro-bind /sys/devices/pci0000:00 /sys/devices/pci0000:00 \
+      --ro-bind /sys/dev/char /sys/dev/char \
+      --ro-bind /run/opengl-driver /run/opengl-driver \
+      {*}[requisites_binds /run/opengl-driver]
+      # MAYBE add /run/opengl-driver32 too (if it exists. does it always exist?)
+  } else {
+    puts "-gpu not supported on non-NixOS"
+    exit 1
+  }
 }
 
 if {$params(net) == 1} {
   lappend bwrap_options \
     --share-net \
     --ro-bind /etc/resolv.conf /etc/resolv.conf \
-    --ro-bind /etc/ssl /etc/ssl \
-    --ro-bind /etc/static/ssl /etc/static/ssl \
-    {*}[requisites_binds /etc/ssl/trust-source] \
-    {*}[requisites_binds /etc/ssl/certs/ca-bundle.crt]
+    --ro-bind /etc/ssl /etc/ssl
+  if {$is_nixos} {
+    lappend bwrap_options \
+      --ro-bind /etc/static/ssl /etc/static/ssl \
+      {*}[requisites_binds /etc/ssl/trust-source] \
+      {*}[requisites_binds /etc/ssl/certs/ca-bundle.crt]
+  }
 }
 
 if {$params(pulse) == 1} {
