@@ -1,5 +1,8 @@
+#! /usr/bin/env tclsh
+
+# Or use this shebang to run the script directly:
 #! /usr/bin/env nix-shell
-#! nix-shell -i tclsh -p tcl tcllib which bubblewrap
+#! nix-shell -i tclsh -p tcl tcllib coreutils which bubblewrap
 
 package require Tcl 8.6
 package require cmdline 1.5
