@@ -59,11 +59,11 @@ set bwrap_options [list --unshare-all --clearenv --setenv HOME $env(HOME)]
 lappend bwrap_options {*}[requisites_binds $exe]
 
 if {$params(x11) == 1} {
-  # TODO use value from $DISPLAY instead of X0 and :0
+  set display [string trimleft $env(DISPLAY) ":"]
   lappend bwrap_options \
     --ro-bind "$env(HOME)/.Xauthority" "$env(HOME)/.Xauthority" \
-    --ro-bind "/tmp/.X11-unix/X0" "/tmp/.X11-unix/X0" \
-    --setenv DISPLAY :0
+    --ro-bind "/tmp/.X11-unix/X$display" "/tmp/.X11-unix/X$display" \
+    --setenv DISPLAY ":$display"
 }
 
 if {$params(gpu) == 1} {
