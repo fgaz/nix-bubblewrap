@@ -17,8 +17,6 @@ pkgs.tcl.mkTclDerivation rec {
     pkgs.makeWrapper
   ];
 
-  passthru.exePath = "/bin/nix-bwrap";
-
   installPhase = ''
     runHook preInstall
     install -Dm755 ${./nix-bwrap.tcl} $out/bin/nix-bwrap
@@ -26,4 +24,8 @@ pkgs.tcl.mkTclDerivation rec {
       --prefix PATH : "${pkgs.lib.makeBinPath buildInputs}"
     runHook postInstall
   '';
+
+  passthru.exePath = "/bin/nix-bwrap";
+
+  meta.mainProgram = "nix-bwrap";
 }
