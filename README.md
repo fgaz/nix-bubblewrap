@@ -65,4 +65,10 @@ This is not done automatically because it breaks executables that rely on
 
 ## Contributing
 
-TODO
+You can send patches to my
+[public-inbox mailing list](https://lists.sr.ht/~fgaz/public-inbox)
+or to any of the contacts listed at [fgaz.me/about](https://fgaz.me/about).
+Or you can send a pull request to the
+[GitHub mirror](https://github.com/fgaz/nix-bubblewrap).
+
+Issues are tracked at https://todo.sr.ht/~fgaz/nix-bubblewrap
