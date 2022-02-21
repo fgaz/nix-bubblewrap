@@ -4,6 +4,9 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i tclsh -p tcl tcllib coreutils which bubblewrap
 
+# (c) Francesco Gazzetta 2022
+# Licensed under the EUPL-1.2-or-later
+
 package require Tcl 8.6
 package require cmdline 1.5
 
