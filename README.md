@@ -20,15 +20,25 @@ Additional flags to add permissions in a nixos-specific way
 (eg. keeping `/run/opengl-driver` and `/etc/ssl` into account)
 are provided.
 
+## Installation
+
+Both a traditional default.nix and a flake are provided. Install with:
+
+    $ nix-env -f . -i
+
+or:
+
+    nix install
+
 ## Usage
 
-    ./nix-bwrap.tcl [OPTIONS] COMMAND ...
+    nix-bwrap [OPTIONS] COMMAND ...
 
 Examples:
 
-    $ nix-shell -p hello --run "./nix-bwrap.tcl hello"
+    $ nix-shell -p hello --run "nix-bwrap hello"
     Hello, world!
-    $ nix-shell -p tree --run "./nix-bwrap.tcl tree -L 3 /"
+    $ nix-shell -p tree --run "nix-bwrap tree -L 3 /"
     /
     `-- nix
         `-- store
@@ -45,9 +55,9 @@ You may want to add a `realpath` call to remove layers of indirection that
 won't be found in the sandbox, such as `/run/current-system/sw/bin/` for
 packages installed through `/etc/nixos/configuration.nix`.
 
-    $ ./nix-bwrap.tcl -x11 -gpu -net firefox
+    $ nix-bwrap -x11 -gpu -net firefox
     bwrap: execvp /run/current-system/sw/bin/firefox: No such file or directory
-    $ ./nix-bwrap.tcl -x11 -gpu -net $(realpath $(which firefox)) https://example.org
+    $ nix-bwrap -x11 -gpu -net $(realpath $(which firefox)) https://example.org
     [firefox starts...]
 
 This is not done automatically because it breaks executables that rely on
