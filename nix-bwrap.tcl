@@ -11,14 +11,17 @@ package require Tcl 8.6
 package require cmdline 1.5
 
 set options {
-  {bwrap-options.arg "" "Additional options to pass to bwrap"          }
-  {extra-store-paths "" "Additional store paths to bind the closure of"}
-  {x11                  "enable basic X11 access"                      }
-  {gpu                  "enable GPU access"                            }
-  {net                  "enable network access and ssl certificates"   }
-  {pulse                "enable pulseaudio"                            }
-  {alsa                 "enable ALSA"                                  }
+  {bwrap-options.arg     "" "Additional options to pass to bwrap"          }
+  {extra-store-paths.arg "" "Additional store paths to bind the closure of"}
+  {x11                      "enable basic X11 access"                      }
+  {gpu                      "enable GPU access"                            }
+  {net                      "enable network access and ssl certificates"   }
+  {pulse                    "enable pulseaudio"                            }
+  {alsa                     "enable ALSA"                                  }
 }
+# TODO -print-command flag, so that nix-bwrap can be used to create wrapper packages
+#        * Write a lib function too (will it work? is it recursive nix?)
+# TODO move all other output to stderr
 
 set usage "\[OPTIONS] COMMAND ...\noptions:"
 
@@ -108,8 +111,14 @@ if {$params(alsa) == 1} {
     --ro-bind /etc/group /etc/group
 }
 
-# TODO extra store paths
-# MAYBE add them to $PATH too (or add another option)
+lappend bwrap_options {*}[
+  concat {*}[lmap path [split $params(extra-store-paths)] {requisites_binds $path}]
+]
+lappend bwrap_options --setenv PATH [
+  join [lmap path $params(extra-store-paths) {string cat $path "/bin"}] ":"
+]
+# TODO dedupe the ro-binds
+# MAYBE use a profile for PATH? it may help with dedup too. and with paths that already include /bin
 
 # has to be done at the end to let the user override previous options
 lappend bwrap_options {*}$params(bwrap-options)
