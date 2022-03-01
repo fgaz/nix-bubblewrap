@@ -21,7 +21,6 @@ set options {
 }
 # TODO -print-command flag, so that nix-bwrap can be used to create wrapper packages
 #        * Write a lib function too (will it work? is it recursive nix?)
-# TODO move all other output to stderr
 
 set usage "\[OPTIONS] COMMAND ...\noptions:"
 
@@ -29,12 +28,12 @@ try {
   array set params [::cmdline::getoptions argv $options $usage]
 } trap {CMDLINE USAGE} {msg o} {
   puts $msg
-  exit 1
+  exit 2
 }
 
 if {$::argv == ""} {
-  puts "error: no command supplied"
-  puts [::cmdline::usage $options $usage]
+  puts stderr "error: no command supplied"
+  puts stderr [::cmdline::usage $options $usage]
   exit 1
 }
 
@@ -81,7 +80,7 @@ if {$params(gpu) == 1} {
       {*}[requisites_binds /run/opengl-driver]
       # MAYBE add /run/opengl-driver32 too (if it exists. does it always exist?)
   } else {
-    puts "-gpu not supported on non-NixOS"
+    puts stderr "-gpu not supported on non-NixOS"
     exit 1
   }
 }
