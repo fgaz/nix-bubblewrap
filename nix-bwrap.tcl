@@ -9,6 +9,7 @@
 
 package require Tcl 8.6
 package require cmdline 1.5
+package require fileutil 1.16
 
 set options {
   {bwrap-options.arg     "" "Additional options to pass to bwrap"          }
@@ -110,14 +111,20 @@ if {$params(alsa) == 1} {
     --ro-bind /etc/group /etc/group
 }
 
-lappend bwrap_options {*}[
-  concat {*}[lmap path [split $params(extra-store-paths)] {requisites_binds $path}]
-]
-lappend bwrap_options --setenv PATH [
-  join [lmap path $params(extra-store-paths) {string cat $path "/bin"}] ":"
-]
-# TODO dedupe the ro-binds
-# MAYBE use a profile for PATH? it may help with dedup too. and with paths that already include /bin
+if {$params(extra-store-paths) != ""} {
+  set tmp_profile_dir [::fileutil::maketempdir -prefix "nix-bubblewrap."]
+  # MAYBE just put $exe in here... or even every other path too (ca-bundle...)
+  #       The downside is that a profile is built every time
+  #       ...but if it already exists only links are created
+  exec -ignorestderr nix-env \
+    --profile "$tmp_profile_dir/profile" \
+    -i {*}$params(extra-store-paths)
+  set profile_path \
+    [file readlink $tmp_profile_dir/[file readlink "$tmp_profile_dir/profile"]]
+  file delete -force $tmp_profile_dir
+  lappend bwrap_options {*}[requisites_binds $profile_path]
+  lappend bwrap_options --setenv PATH "$profile_path/bin"
+}
 
 # has to be done at the end to let the user override previous options
 lappend bwrap_options {*}$params(bwrap-options)
