@@ -100,8 +100,14 @@ if {$params(net) == 1} {
 }
 
 if {$params(pulse) == 1} {
-  set uid [exec id -u]
-  lappend bwrap_options --ro-bind /run/user/$uid/pulse /run/user/$uid/pulse
+  if [info exists env(XDG_RUNTIME_DIR)] {
+    set runtime_dir $env(XDG_RUNTIME_DIR)
+  } else {
+    set runtime_dir /run/user/[exec id -u]
+  }
+  lappend bwrap_options \
+    --ro-bind $runtime_dir/pulse $runtime_dir/pulse \
+    --setenv XDG_RUNTIME_DIR $runtime_dir
 }
 
 if {$params(alsa) == 1} {
