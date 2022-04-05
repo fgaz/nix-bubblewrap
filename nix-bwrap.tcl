@@ -46,7 +46,7 @@ proc requisites_binds {path} {
 try {
   exec nixos-version
   set is_nixos 1
-} trap CHILDSTATUS {- -} {
+} trap {POSIX ENOENT} {- -} {
   set is_nixos 0
 }
 
