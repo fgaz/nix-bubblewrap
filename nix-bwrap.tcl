@@ -14,11 +14,11 @@ package require fileutil 1.16
 set options {
   {bwrap-options.arg     "" "Additional options to pass to bwrap"          }
   {extra-store-paths.arg "" "Additional store paths to bind the closure of"}
-  {x11                      "enable basic X11 access"                      }
-  {gpu                      "enable GPU access"                            }
-  {net                      "enable network access and ssl certificates"   }
-  {pulse                    "enable pulseaudio"                            }
-  {alsa                     "enable ALSA"                                  }
+  {x11                      "Enable basic X11 access"                      }
+  {gpu                      "Enable GPU access"                            }
+  {net                      "Enable network access and ssl certificates"   }
+  {pulse                    "Enable pulseaudio"                            }
+  {alsa                     "Enable ALSA"                                  }
 }
 # TODO -print-command flag, so that nix-bwrap can be used to create wrapper packages
 #        * Write a lib function too (will it work? is it recursive nix?)
