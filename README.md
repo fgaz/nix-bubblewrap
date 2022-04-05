@@ -34,6 +34,8 @@ or:
 
     nix-bwrap [OPTIONS] COMMAND ...
 
+Run `nix-bwrap -help` to list the available options.
+
 Examples:
 
     $ nix-shell -p hello --run "nix-bwrap hello"
