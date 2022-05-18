@@ -10,7 +10,7 @@ In a typical Linux system, bubblewrap is run like this:
 
 With Nix, one would have to replace `/usr` with `/nix/store`...
 but
-[all kind](https://search.nixos.org/options?channel=unstable&sort=relevance&type=packages&query=password)
+[all kinds](https://search.nixos.org/options?channel=unstable&sort=relevance&type=packages&query=password)
 [of stuff](https://search.nixos.org/options?channel=unstable&sort=relevance&type=packages&query=secret)
 you may not want an attacker to see can end up in the store.
 Binding individual store paths can also be a pain since the whole closure is
