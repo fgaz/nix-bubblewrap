@@ -95,8 +95,9 @@ Issues are tracked at https://todo.sr.ht/~fgaz/nix-bubblewrap
 
 ## Alternatives
 
-Using `writeReferencesToFile`, the same can be made to work entirely within nix,
-without needing an external program such as this one.
+Using `writeReferencesToFile` or `closureInfo` from nixpkgs, the same can be
+made to work entirely within nix, without needing an external program such as
+this one.
 Why does this tool exist then?
 Because when only using `writeReferencesToFile` at build time, wrappers of
 programs that need access to resources such as `/etc/ssl` would need to have
