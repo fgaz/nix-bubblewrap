@@ -51,6 +51,24 @@ Examples:
 
     6 directories, 0 files
 
+### Wrapping
+
+In `lib.nix` (`lib` output in the flake) there are wrapper functions to create
+wrapped versions of existing packages.
+For example:
+
+    with import <nixpkgs> {};
+    with import ./lib.nix {};
+    wrapPackage {
+      package = firefox;
+      options = [
+        "-x11"
+        "-gpu"
+        "-net"
+        "-pulse"
+      ];
+    }
+
 ## Troubeshooting
 
 You may want to add a `realpath` call to remove layers of indirection that
