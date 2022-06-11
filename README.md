@@ -57,10 +57,9 @@ In `lib.nix` (`lib` output in the flake) there are wrapper functions to create
 wrapped versions of existing packages.
 For example:
 
-    with import <nixpkgs> {};
     with import ./lib.nix {};
     wrapPackage {
-      package = firefox;
+      package = (import <nixpkgs> {}).firefox;
       options = [
         "-x11"
         "-gpu"
