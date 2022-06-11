@@ -74,3 +74,14 @@ Or you can send a pull request to the
 [GitHub mirror](https://github.com/fgaz/nix-bubblewrap).
 
 Issues are tracked at https://todo.sr.ht/~fgaz/nix-bubblewrap
+
+## Alternatives
+
+Using `writeReferencesToFile`, the same can be made to work entirely within nix,
+without needing an external program such as this one.
+Why does this tool exist then?
+Because when only using `writeReferencesToFile` at build time, wrappers of
+programs that need access to resources such as `/etc/ssl` would need to have
+access to the same expressions as the NixOS system, and that can become
+troublesome for user environments and shells.
+With `nix-bwrap` there are no such problems, at a small runtime cost.
