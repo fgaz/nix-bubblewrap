@@ -62,7 +62,7 @@ set bwrap_options [list --unshare-all --clearenv --setenv HOME $env(HOME)]
 lappend bwrap_options {*}[requisites_binds $exe]
 
 if {$params(x11) == 1} {
-  set display [string trimleft $env(DISPLAY) ":"]
+  regexp {:([0-9]+)(\.[0-9]+)?} $env(DISPLAY) _ display
   lappend bwrap_options \
     --ro-bind "$env(HOME)/.Xauthority" "$env(HOME)/.Xauthority" \
     --ro-bind "/tmp/.X11-unix/X$display" "/tmp/.X11-unix/X$display" \
