@@ -82,6 +82,18 @@ packages installed through `/etc/nixos/configuration.nix`.
 This is not done automatically because it breaks executables that rely on
 `argv[0]`, such as coreutils and busybox.
 
+### Missing `-gpu`
+
+The following messages may indicate the application requires the `-gpu` flag:
+
+* `Can't find icudtl.dat`
+
+### Missing `-x11`
+
+The following messages may indicate the application requires the `-x11` flag:
+
+* `Missing X server or $DISPLAY`
+
 ## Contributing
 
 You can send patches to my
