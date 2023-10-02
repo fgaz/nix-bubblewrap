@@ -50,11 +50,8 @@ try {
   set is_nixos 0
 }
 
-# there used to be a realpath
-# (or ::fileutil::fullnormalize, file normalize, file readlink) call here, but
-# it makes single-executable tools (such as busybox or coreutils) useless
-# MAYBE do it only for /run/current-system/sw/bin
-set exe [exec which [lindex $::argv 0]]
+set argv0 [lindex $::argv 0]
+set exe [exec realpath [exec which $argv0]]
 set args [lreplace $::argv 0 0]
 
 set bwrap_options [list --unshare-all --clearenv --setenv HOME $env(HOME)]
@@ -136,7 +133,7 @@ if {$params(extra-store-paths) != ""} {
 lappend bwrap_options {*}$params(bwrap-options)
 
 try {
-  exec bwrap {*}$bwrap_options $exe {*}$args <@stdin >@stdout 2>@stderr
+  exec bwrap {*}$bwrap_options --argv0 $argv0 $exe {*}$args <@stdin >@stdout 2>@stderr
 } trap CHILDSTATUS {- options} {
   exit [lindex [dict get $options -errorcode] 2]
 }
