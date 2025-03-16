@@ -70,18 +70,6 @@ For example:
 
 ## Troubeshooting
 
-You may want to add a `realpath` call to remove layers of indirection that
-won't be found in the sandbox, such as `/run/current-system/sw/bin/` for
-packages installed through `/etc/nixos/configuration.nix`.
-
-    $ nix-bwrap -x11 -gpu -net firefox
-    bwrap: execvp /run/current-system/sw/bin/firefox: No such file or directory
-    $ nix-bwrap -x11 -gpu -net $(realpath $(which firefox)) https://example.org
-    [firefox starts...]
-
-This is not done automatically because it breaks executables that rely on
-`argv[0]`, such as coreutils and busybox.
-
 ### Missing `-gpu`
 
 The following messages may indicate the application requires the `-gpu` flag:
