@@ -1,1 +1,10 @@
 result
+
+# I only use this project occasionally, and update it even more rarely.
+# The dependencies have a very stable interface and are security sensitive.
+# So I think it makes sense to explicitly leave the locking to users.
+# When adding this flake as input to another flake this shouldn't cause any
+# issue, since the top level flake will take care of locking.
+# It blocks imperative commands, but one can use --no-write-lock-file
+# as suggested in the error message.
+/flake.lock
