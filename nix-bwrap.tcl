@@ -97,7 +97,7 @@ if {$params(net) == 1} {
 }
 
 if {$params(pulse) == 1} {
-  if [info exists env(XDG_RUNTIME_DIR)] {
+  if {[info exists env(XDG_RUNTIME_DIR)]} {
     set runtime_dir $env(XDG_RUNTIME_DIR)
   } else {
     set runtime_dir /run/user/[exec id -u]
