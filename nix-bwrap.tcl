@@ -50,9 +50,8 @@ try {
   set is_nixos 0
 }
 
-set argv0 [lindex $::argv 0]
+set args [lassign $::argv argv0]
 set exe [exec realpath [exec which $argv0]]
-set args [lreplace $::argv 0 0]
 
 set bwrap_options [list --unshare-all --clearenv --setenv HOME $env(HOME)]
 
