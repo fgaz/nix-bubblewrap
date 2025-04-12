@@ -103,3 +103,7 @@ programs that need access to resources such as `/etc/ssl` would need to have
 access to the same expressions as the NixOS system, and that can become
 troublesome for user environments and shells.
 With `nix-bwrap` there are no such problems, at a small runtime cost.
+
+Update: https://github.com/nixpak/nixpak is a more full-featured project
+for declarative that nicely solves
+this issue through xdg-dbus-proxy.
