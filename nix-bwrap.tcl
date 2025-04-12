@@ -40,12 +40,12 @@ if {$::argv == ""} {
 }
 
 proc requisites_binds {path} {
-  set requisites [exec nix-store --query --requisites $path]
+  set requisites [exec -ignorestderr nix-store --query --requisites $path]
   return [concat {*}[lmap x $requisites {list --ro-bind $x $x}]]
 }
 
 try {
-  exec nixos-version
+  exec -ignorestderr nixos-version
   set is_nixos 1
 } trap {POSIX ENOENT} {- -} {
   set is_nixos 0
@@ -133,7 +133,7 @@ if {$params(extra-store-paths) != ""} {
 lappend bwrap_options {*}$params(bwrap-options)
 
 try {
-  exec bwrap {*}$bwrap_options --argv0 $argv0 $exe {*}$args <@stdin >@stdout 2>@stderr
+  exec -ignorestderr bwrap {*}$bwrap_options --argv0 $argv0 $exe {*}$args <@stdin >@stdout 2>@stderr
 } trap CHILDSTATUS {- options} {
   exit [lindex [dict get $options -errorcode] 2]
 }
