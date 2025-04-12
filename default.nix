@@ -8,9 +8,8 @@ pkgs.tcl.mkTclDerivation rec {
 
   buildInputs = with pkgs; [
     tcllib
+    tclx
     bubblewrap
-    coreutils
-    which
     # We don't put nix here, since it's already guaranteed that the user will
     # have it and that it will be the appropriate version to interact with
     # the store

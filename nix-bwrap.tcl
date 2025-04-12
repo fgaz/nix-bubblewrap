@@ -8,6 +8,7 @@
 # Licensed under the EUPL-1.2-or-later
 
 package require Tcl 8.6
+package require Tclx 8.6
 package require cmdline 1.5
 package require fileutil 1.16
 
@@ -51,7 +52,7 @@ try {
 }
 
 set args [lassign $::argv argv0]
-set exe [exec realpath [exec which $argv0]]
+set exe [::fileutil::fullnormalize [auto_execok $argv0]]
 
 set bwrap_options [list --unshare-all --clearenv --setenv HOME $env(HOME)]
 
@@ -99,7 +100,7 @@ if {$params(pulse) == 1} {
   if {[info exists env(XDG_RUNTIME_DIR)]} {
     set runtime_dir $env(XDG_RUNTIME_DIR)
   } else {
-    set runtime_dir /run/user/[exec id -u]
+    set runtime_dir /run/user/[id effective userid]
   }
   lappend bwrap_options \
     --ro-bind $runtime_dir/pulse $runtime_dir/pulse \
