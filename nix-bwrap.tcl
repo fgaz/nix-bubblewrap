@@ -20,6 +20,7 @@ set options {
   {net                      "Enable network access and ssl certificates"   }
   {pulse                    "Enable pulseaudio"                            }
   {alsa                     "Enable ALSA"                                  }
+  {pipewire                 "Enable pipewire"                              }
 }
 # TODO -print-command flag, so that nix-bwrap can be used to create wrapper packages
 #        * Write a lib function too (will it work? is it recursive nix?)
@@ -57,6 +58,15 @@ set exe [::fileutil::fullnormalize [auto_execok $argv0]]
 set bwrap_options [list --unshare-all --clearenv --setenv HOME $env(HOME)]
 
 lappend bwrap_options {*}[requisites_binds $exe]
+
+# Needed for multiple options
+if {[info exists env(XDG_RUNTIME_DIR)]} {
+  set runtime_dir $env(XDG_RUNTIME_DIR)
+  lappend bwrap_options \
+    --setenv XDG_RUNTIME_DIR $runtime_dir
+} else {
+  set runtime_dir /run/user/[id effective userid]
+}
 
 if {$params(x11) == 1} {
   regexp {:([0-9]+)(\.[0-9]+)?} $env(DISPLAY) _ display
@@ -97,14 +107,14 @@ if {$params(net) == 1} {
 }
 
 if {$params(pulse) == 1} {
-  if {[info exists env(XDG_RUNTIME_DIR)]} {
-    set runtime_dir $env(XDG_RUNTIME_DIR)
-  } else {
-    set runtime_dir /run/user/[id effective userid]
-  }
   lappend bwrap_options \
-    --ro-bind $runtime_dir/pulse $runtime_dir/pulse \
-    --setenv XDG_RUNTIME_DIR $runtime_dir
+    --ro-bind $runtime_dir/pulse $runtime_dir/pulse
+}
+
+if {$params(pipewire) == 1} {
+  lappend bwrap_options \
+    --ro-bind $runtime_dir/pipewire-0 $runtime_dir/pipewire-0 \
+    --ro-bind $runtime_dir/pipewire-0-manager $runtime_dir/pipewire-0-manager
 }
 
 if {$params(alsa) == 1} {
