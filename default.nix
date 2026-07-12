@@ -7,8 +7,8 @@ pkgs.tcl.mkTclDerivation rec {
   dontUnpack = true;
 
   buildInputs = with pkgs; [
-    tcllib
-    tclx
+    tclPackages.tcllib
+    tclPackages.tclx
     bubblewrap
     # We don't put nix here, since it's already guaranteed that the user will
     # have it and that it will be the appropriate version to interact with
